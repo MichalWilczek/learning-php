@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` text COLLATE utf8_polish_ci NOT NULL,
   `wood` int(11) NOT NULL,
   `stone` int(11) NOT NULL,
-  `wheet` int(11) NOT NULL,
+  `wheat` int(11) NOT NULL,
   `premiumdays` int(11) NOT NULL
 ) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Row data for table `users`
 --
 
-INSERT INTO `users` (`id`, `user`, `pass`, `email`, `drewno`, `kamien`, `zboze`, `dnipremium`) VALUES
+INSERT INTO `users` (`id`, `user`, `pass`, `email`, `wood`, `stone`, `wheat`, `premiumdays`) VALUES
 (1, 'adam', 'qwerty', 'adam@gmail.com', 213, 5675, 342, 0),
 (2, 'marek', 'asdfg', 'marek@gmail.com', 324, 1123, 4325, 15),
 (3, 'anna', 'zxcvb', 'anna@gmail.com', 4536, 17, 120, 25),
