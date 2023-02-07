@@ -51,6 +51,15 @@ if (isset($_POST["email"])) {
         $_SESSION["error_bot"] = "Confirm you are not a bot.";
     }
 
+    // Remember typed in registration elements.
+    $_SESSION["reg_form_nick"] = $nick;
+    $_SESSION["reg_form_email"] = $email;
+    $_SESSION["reg_form_password1"] = $password1;
+    $_SESSION["reg_form_password2"] = $password2;
+    if (isset($_POST["terms_conditions"])) {
+        $_SESSION["reg_form_terms_conditions"] = true;
+    }
+
     require_once "connect.php";
     mysqli_report(MYSQLI_REPORT_STRICT);
     try {
@@ -102,6 +111,40 @@ if (isset($_POST["email"])) {
         echo "<br /> Developer info: " . $error;
     }
 }
+
+// We delete the variables which the form remembers after wrong typing.
+if (isset($_SESSION["reg_form_nick"])) {
+    unset($_SESSION["reg_form_nick"]);
+}
+if (isset($_SESSION["reg_form_email"])) {
+    unset($_SESSION["reg_form_email"]);
+}
+if (isset($_SESSION["reg_form_password1"])) {
+    unset($_SESSION["reg_form_password1"]);
+}
+if (isset($_SESSION["reg_form_password2"])) {
+    unset($_SESSION["reg_form_password2"]);
+}
+if (isset($_SESSION["reg_form_terms_conditions"])) {
+    unset($_SESSION["reg_form_terms_conditions"]);
+}
+
+// We delete registration errors.
+if (isset($_SESSION["error_nick"])) {
+    unset($_SESSION["error_nick"]);
+}
+if (isset($_SESSION["error_email"])) {
+    unset($_SESSION["error_email"]);
+}
+if (isset($_SESSION["error_password1"])) {
+    unset($_SESSION["error_password1"]);
+}
+if (isset($_SESSION["error_password2"])) {
+    unset($_SESSION["error_password2"]);
+}
+if (isset($_SESSION["error_terms_conditions"])) {
+    unset($_SESSION["error_terms_conditions"]);
+}
 ?>
 
 <!DOCTYPE html>
@@ -127,35 +170,61 @@ if (isset($_POST["email"])) {
 
     <form method="post">
 
-        Nickname: <br /><input type="text" name="nick"><br />
+        Nickname: <br /><input type="text" value="<?php
+        if (isset($_SESSION['reg_form_nick'])) {
+            echo $_SESSION['reg_form_nick'];
+            unset($_SESSION['reg_form_nick']);
+        } ?>" name="nick">
+        <br />
         <?php
         if (isset($_SESSION["error_nick"])) {
             echo "<div class='error'>" . $_SESSION["error_nick"] . "</div>";
             unset($_SESSION["error_nick"]);
         }
         ?>
-        E-mail: <br /><input type="text" name="email"><br />
+
+        E-mail: <br /><input type="text" value="<?php
+        if (isset($_SESSION['reg_form_email'])) {
+            echo $_SESSION['reg_form_email'];
+            unset($_SESSION['reg_form_email']);
+        } ?>" name="email"><br />
         <?php
         if (isset($_SESSION["error_email"])) {
             echo "<div class='error'>" . $_SESSION["error_email"] . "</div>";
             unset($_SESSION["error_email"]);
         }
         ?>
-        Password: <br /><input type="password" name="password1"><br />
+
+        Password: <br /><input type="password" value="<?php
+        if (isset($_SESSION['reg_form_password1'])) {
+            echo $_SESSION['reg_form_password1'];
+            unset($_SESSION['reg_form_password1']);
+        } ?>" name="password1"><br />
         <?php
         if (isset($_SESSION["error_password"])) {
             echo "<div class='error'>" . $_SESSION["error_password"] . "</div>";
             unset($_SESSION["error_password"]);
         }
         ?>
-        Repeated password: <br /><input type="password" name="password2"><br />
-        <label><input type="checkbox" name="terms_conditions"> I accept terms and conditions</label>
+
+        Repeated password: <br /><input type="password" value="<?php
+        if (isset($_SESSION['reg_form_password2'])) {
+            echo $_SESSION['reg_form_password2'];
+            unset($_SESSION['reg_form_password2']);
+        } ?>" name="password2"><br />
+
+        <label><input type="checkbox" name="terms_conditions" <?php
+        if (isset($_SESSION["reg_terms_conditions"])) {
+            echo "checked";
+            unset($_SESSION["reg_terms_conditions"]);
+        } ?>> I accept terms and conditions</label>
         <?php
         if (isset($_SESSION["error_terms_conditions"])) {
             echo "<div class='error'>" . $_SESSION["error_terms_conditions"] . "</div>";
             unset($_SESSION["error_terms_conditions"]);
         }
         ?>
+
         <div class="g-recaptcha" data-sitekey="6LfJyl8kAAAAALSqi2Lr_wvB5XzKNDvkq714tuN4"></div><br />
         <?php
         if (isset($_SESSION["error_bot"])) {
@@ -163,11 +232,10 @@ if (isset($_POST["email"])) {
             unset($_SESSION["error_bot"]);
         }
         ?>
+
         <input type="submit" value="register">
         </script>
     </form>
 </body>
-
-
 
 </html>
