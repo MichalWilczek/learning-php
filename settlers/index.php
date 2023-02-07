@@ -19,6 +19,9 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == true) {
 <body>
 
     Only the dead have seen the end of war - Platon <br /><br />
+
+    <a href="registration.php">Register - create a free account!</a><br /><br />
+
     <form action="login.php" method="post">
         Login: <br><input type="text" name="login" /><br />
         Password: <br><input type="password" name="password" /><br /><br />

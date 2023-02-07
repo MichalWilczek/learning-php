@@ -28,32 +28,35 @@
 
         // Convert quotes to html entities to avoid SQL injection for getting the user passwords
         $login = htmlentities($login, ENT_QUOTES, "UTF-8");
-        $password = htmlentities($password, ENT_QUOTES, "UTF-8");
         if (
             // 'mysqli_real_escape_string' also prevents SQL injections
             $result = @$connection->query(
                 sprintf(
-                    "SELECT * FROM users WHERE user='%s' AND pass='%s'",
-                    mysqli_real_escape_string($connection, $login),
-                    mysqli_real_escape_string($connection, $password)
+                    "SELECT * FROM users WHERE user='%s'",
+                    mysqli_real_escape_string($connection, $login)
                 )
             )
         ) {
             $users_amount = $result->num_rows;
             if ($users_amount > 0) {
-                $_SESSION["logged_in"] = true;
-
                 $row = $result->fetch_assoc();
-                $_SESSION["id"] = $row["id"];
-                $_SESSION["user"] = $row["user"];
-                $_SESSION["wood"] = $row["wood"];
-                $_SESSION["stone"] = $row["stone"];
-                $_SESSION["wheat"] = $row["wheat"];
-                $_SESSION["email"] = $row["email"];
-                $_SESSION["premiumdays"] = $row["premiumdays"];
-                $password = $row["pass"];
-                header("Location: game.php");
-                $result->free_result();
+                if (password_verify($password, $row["pass"]) == true) {
+                    $_SESSION["logged_in"] = true;
+                    $_SESSION["id"] = $row["id"];
+                    $_SESSION["user"] = $row["user"];
+                    $_SESSION["wood"] = $row["wood"];
+                    $_SESSION["stone"] = $row["stone"];
+                    $_SESSION["wheat"] = $row["wheat"];
+                    $_SESSION["email"] = $row["email"];
+                    $_SESSION["premiumdays"] = $row["premiumdays"];
+                    $password = $row["pass"];
+                    header("Location: game.php");
+                    $result->free_result();
+                } else {
+                    unset($_SESSION["error"]);
+                    $_SESSION["error"] = "<span style='color:red;'>Incorrect login or password</span>";
+                    header("Location: index.php");
+                }
             } else {
                 unset($_SESSION["error"]);
                 $_SESSION["error"] = "<span style='color:red;'>Incorrect login or password</span>";
