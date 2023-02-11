@@ -91,12 +91,11 @@ if (isset($_POST["email"])) {
 
             // All tests passed. The user can be added to the database.
             if ($validated == true) {
-
-                if (
-                    $connection->query(
-                        "INSERT INTO users VALUES (NULL, '$nick', '$hashed_password', '$email', 100, 100, 100, 14)"
-                    )
-                ) {
+                // Set query with 14 days of premium days
+                $utc_time =  gmdate('Y-m-d H:i:s', strtotime("+14 days"));
+                $str_query = "INSERT INTO users VALUES (NULL, '$nick', '$hashed_password', '$email', 100, 100, 100, '$utc_time')";
+                
+                if ($connection->query($str_query)) {
                     $_SESSION["successful_registration"] = true;
                     header("Location: welcome.php");
                 } else {
